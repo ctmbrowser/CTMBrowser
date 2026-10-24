@@ -58,9 +58,9 @@
           </ul>
           <p>
             Prezzo di listino: <strong>39,90 €</strong>/anno per postazione
-            (oltre contributo cassa 4% e bollo € 2,00);<br>
+            (oltre 4% INPS, 4% Inarcassa e bollo € 2,00);<br>
             Prezzo di lancio: <strong>24,90 €</strong>/anno per postazione
-            (oltre contributo cassa 4% e bollo € 2,00).
+            (oltre 4% INPS, 4% Inarcassa e bollo € 2,00): totale da pagare <strong>28,93 €</strong>.
           </p>
         </div>
 
@@ -76,9 +76,9 @@
           </ul>
           <p>
             Prezzo di listino: <strong>69,90 €</strong> per postazione
-            (oltre contributo cassa 4% e bollo € 2,00);<br>
+            (oltre 4% INPS, 4% Inarcassa e bollo € 2,00);<br>
             Prezzo di lancio: <strong>39,90 €</strong> per postazione
-            (oltre contributo cassa 4% e bollo € 2,00).
+            (oltre 4% INPS, 4% Inarcassa e bollo € 2,00): totale da pagare <strong>45,16 €</strong>.
           </p>
         </div>
       </div>
@@ -89,8 +89,8 @@
       <h2>Modalità di pagamento</h2>
       <p>
         Scegli come preferisci pagare: le istruzioni cambiano in base alla scelta.
-        Importo da versare per il piano <strong><span id="piano-corrente-nome">Life-time</span></strong>:
-        <strong><span class="js-price">39,90</span> €</strong>.
+        Importo totale da versare (imponibile + 4% INPS + 4% Inarcassa + bollo € 2,00) per il piano <strong><span id="piano-corrente-nome">Life-time</span></strong>:
+        <strong><span class="js-price">45,16</span> €</strong>.
       </p>
 
       <div class="pay-tabs">
@@ -125,7 +125,7 @@
           <ul class="info-list">
             <li>intestatario: <strong>Mirco Natalini</strong>;</li>
             <li>IBAN: <strong>IT52E03268223000EMH00127242</strong>;</li>
-            <li>importo: <strong><span class="js-price">39,90</span> € (prezzo di lancio)</strong> per il piano selezionato (oltre contributo cassa 4% e bollo € 2,00);</li>
+            <li>importo: <strong><span class="js-price">45,16</span> €</strong> totale per il piano selezionato (imponibile + 4% INPS + 4% Inarcassa + bollo € 2,00);</li>
             <li>causale: <strong>“Licenza CTM – [nome cognome / studio]”</strong>.</li>
           </ul>
           <p class="note">
@@ -152,7 +152,7 @@
                pagamento). Il pulsante è un PLACEHOLDER, non funzionante. ⚠⚠⚠ -->
           <p>
             <a class="btn-primary js-link-carta" href="#" rel="noopener noreferrer">
-              💳 Paga con carta (<span class="js-price">39,90</span> €)
+              💳 Paga con carta (<span class="js-price">45,16</span> €)
             </a>
           </p>
         </div>
@@ -172,7 +172,7 @@
                direttamente la schermata di pagamento con importo precompilato. -->
           <p>
             <a class="btn-primary js-link-paypal" href="#" rel="noopener noreferrer">
-              Paga con PayPal (<span class="js-price">39,90</span> €)
+              Paga con PayPal (<span class="js-price">45,16</span> €)
             </a>
           </p>
         </div>
@@ -322,14 +322,14 @@
   // Selezione piano di licenza (Annuale / Life-time): aggiorna il pannello
   // di descrizione E tutti i prezzi mostrati più sotto (bonifico, carta,
   // PayPal), che condividono la classe "js-price".
-  var CTM_PREZZI = { annuale: '24,90', lifetime: '39,90' };
+  var CTM_PREZZI = { annuale: '28,93', lifetime: '45,16' };
   // ⚠ LINK DI PAGAMENTO: incolla qui i tuoi URL reali (uno per piano).
   //   carta  = Payment Link Stripe  (https://buy.stripe.com/...)
   //   paypal = link di pagamento PayPal (https://www.paypal.com/ncp/payment/...)
   // Finché restano vuoti, il pulsante avvisa di scrivere via mail.
   var CTM_LINK = {
-    annuale:  { carta: 'https://buy.stripe.com/aFa7sLcVPbf23pA5Poew803', paypal: 'https://www.paypal.com/ncp/payment/LEHGMN3QSSA7Q' },
-    lifetime: { carta: 'https://buy.stripe.com/00waEXf3XgzmbW65Poew802', paypal: 'https://www.paypal.com/ncp/payment/3UG5KBF6L3GE4' }
+    annuale:  { carta: '', paypal: '' },
+    lifetime: { carta: '', paypal: '' }
   };
   var CTM_NOMI_PIANO = { annuale: 'Annuale', lifetime: 'Life-time' };
 
