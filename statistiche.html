@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>·</title>
+<style>
+  html,body{margin:0;height:100%;background:#0f1115;color:#cfd6e4;font:600 28px/1.4 ui-monospace,Menlo,Consolas,monospace}
+  main{min-height:100%;display:flex;align-items:center;justify-content:center;gap:2.2rem;flex-wrap:wrap;padding:16px}
+  span{letter-spacing:.04em}
+</style>
+</head>
+<body>
+<main><span id="w">W…</span><span id="m1">M1…</span><span id="m2">M2…</span></main>
+<script>
+  var REPOS = ['ctmbrowser/CTMBrowser', 'natalinimirco/ctm-webbrowser-site'];
+  function tipo(n){
+    n = (n||'').toLowerCase();
+    if (/\.exe$/.test(n)) return 'w';
+    if (/mac/.test(n) && /(apple|silicon|arm)/.test(n) && /\.zip$/.test(n)) return 'm1';
+    if (/mac/.test(n) && /intel/.test(n) && /\.zip$/.test(n)) return 'm2';
+    return null;
+  }
+  function leggi(repo){
+    return fetch('https://api.github.com/repos/'+repo+'/releases?per_page=100',
+      {headers:{'Accept':'application/vnd.github+json'}})
+      .then(function(r){ if(!r.ok) throw new Error(); return r.json(); });
+  }
+  Promise.all(REPOS.map(leggi)).then(function(liste){
+    var t = {w:0, m1:0, m2:0};
+    [].concat.apply([], liste).forEach(function(r){
+      (r.assets||[]).forEach(function(a){ var k = tipo(a.name); if(k) t[k] += (a.download_count||0); });
+    });
+    document.getElementById('w').textContent  = 'W'  + t.w;
+    document.getElementById('m1').textContent = 'M1' + t.m1;
+    document.getElementById('m2').textContent = 'M2' + t.m2;
+  }).catch(function(){
+    ['w','m1','m2'].forEach(function(k){ document.getElementById(k).textContent = k.toUpperCase()+'–'; });
+  });
+</script>
+</body>
+</html>
