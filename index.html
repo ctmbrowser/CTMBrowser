@@ -19,6 +19,34 @@
   <link rel="icon" type="image/x-icon" href="app_icon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <style>
+    /* --- Selettore Screenshot / Video sotto lo slideshow --- */
+    .hero-screens { flex-direction: column; align-items: center; }
+    .media-tabs { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+    .media-tab {
+      padding: 7px 18px; border-radius: 999px; border: 1px solid var(--border);
+      background: #fff; color: var(--navy-700); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
+    }
+    .media-tab.on { background: var(--navy-700); color: #fff; border-color: var(--navy-700); }
+    .video-pane { display: none; position: relative; width: 100%; aspect-ratio: 1440 / 950; background: #0f1f33; }
+    .slider.video-mode .video-pane { display: block; }
+    .slider.video-mode .slide, .slider.video-mode .slider-arrow { display: none; }
+    .video-pane video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #0f1f33; }
+    .video-play {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 92px; height: 92px; border-radius: 50%; cursor: pointer;
+      border: 3px solid rgba(255, 255, 255, 0.85); background: rgba(15, 31, 51, 0.38);
+      -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .video-play:hover, .video-play:focus-visible { background: rgba(43, 92, 147, 0.6); transform: translate(-50%, -50%) scale(1.06); }
+    .video-play svg { width: 38px; height: 38px; margin-left: 6px; fill: #fff; opacity: 0.95; }
+    .video-play[hidden] { display: none; }
+    .video-msg { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; color: #fff; font-size: 0.85rem; }
+    @media (max-width: 600px) { .video-play { width: 68px; height: 68px; } .video-play svg { width: 28px; height: 28px; } }
+  </style>
 </head>
 <body>
 
@@ -59,7 +87,7 @@
 
     <!-- SLIDESHOW SCHERMATE -->
     <div class="hero-screens">
-      <div class="slider">
+      <div class="slider" id="hero-slider">
         <button class="slider-arrow left" aria-label="Schermata precedente">&#10094;</button>
         <div class="slide active">
           <img src="1.jpg" alt="Schermata principale di CTM WebBrowser con elenco getti e stato PEC" />
@@ -68,6 +96,24 @@
           <img src="2.jpg" alt="Schermata di CTM WebBrowser con programmazione eventi e scadenze" />
         </div>
         <button class="slider-arrow right" aria-label="Schermata successiva">&#10095;</button>
+
+        <!-- VIDEO DI PRESENTAZIONE: parte solo dopo il clic sul play -->
+        <div class="video-pane" id="video-pane">
+          <video id="promo-video" preload="none" playsinline controlslist="nodownload"
+                 poster="video_poster.jpg">
+            <source src="video_presentazione.mp4" type="video/mp4" />
+            Il tuo browser non supporta la riproduzione video.
+          </video>
+          <button type="button" class="video-play" id="video-play" aria-label="Riproduci il video di presentazione">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+          </button>
+          <div class="video-msg" id="video-msg" hidden>Video non disponibile al momento.</div>
+        </div>
+      </div>
+
+      <div class="media-tabs" id="media-tabs">
+        <button type="button" class="media-tab on" data-mode="shots" aria-pressed="true">🖼 Screenshot</button>
+        <button type="button" class="media-tab" data-mode="video" aria-pressed="false">▶ Video</button>
       </div>
     </div>
 
@@ -347,8 +393,11 @@
       showSlide(prev);
     }
 
+    var sliderEl = document.getElementById('hero-slider');
+
     function startAuto() {
       stopAuto();
+      if (sliderEl && sliderEl.classList.contains('video-mode')) return; // in modalità video niente slideshow
       timer = setInterval(nextSlide, 5000); // 5 secondi
     }
 
@@ -381,6 +430,59 @@
           startAuto();
         }
       });
+    }
+
+    // --- Selettore Screenshot / Video + riproduzione video ---
+    var video = document.getElementById('promo-video');
+    var playBtn = document.getElementById('video-play');
+    var videoMsg = document.getElementById('video-msg');
+    var mediaTabs = document.querySelectorAll('.media-tab');
+
+    function resetVideoUi() {
+      if (!video) return;
+      video.pause();
+      video.controls = false;
+      if (playBtn) playBtn.hidden = false;
+    }
+
+    function setMode(mode) {
+      if (!sliderEl) return;
+      mediaTabs.forEach(function (b) {
+        var on = b.getAttribute('data-mode') === mode;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      if (mode === 'video') {
+        stopAuto();
+        sliderEl.classList.add('video-mode');
+      } else {
+        resetVideoUi();
+        sliderEl.classList.remove('video-mode');
+        startAuto();
+      }
+    }
+
+    mediaTabs.forEach(function (b) {
+      b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); });
+    });
+
+    if (video && playBtn) {
+      playBtn.addEventListener('click', function () {
+        video.controls = true;
+        playBtn.hidden = true;
+        var p = video.play();
+        if (p && p.catch) {
+          p.catch(function () { video.controls = true; playBtn.hidden = false; });
+        }
+      });
+      video.addEventListener('ended', function () {
+        video.controls = false;
+        playBtn.hidden = false;
+      });
+      video.addEventListener('error', function () {
+        playBtn.hidden = true;
+        if (videoMsg) videoMsg.hidden = false;
+      }, true);
     }
 
     // placeholder recensioni: se aggiungi almeno una review-card manualmente, nascondi il placeholder
