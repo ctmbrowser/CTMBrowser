@@ -147,9 +147,6 @@
             dal nostro sito. Dopo il pagamento invia comunque una mail di conferma a
             <a href="mailto:ctmbrowser@gmail.com">ctmbrowser@gmail.com</a> con i dati di fatturazione.
           </p>
-          <!-- ⚠⚠⚠ TODO PRIMA DI PUBBLICARE: sostituire con il vero Payment Link
-               Stripe una volta creato dalla dashboard Stripe (Pagamenti → Link di
-               pagamento). Il pulsante è un PLACEHOLDER, non funzionante. ⚠⚠⚠ -->
           <p>
             <a class="btn-primary js-link-carta" href="#" rel="noopener noreferrer">
               💳 Paga con carta (<span class="js-price">45,16</span> €)
@@ -328,8 +325,8 @@
   //   paypal = link di pagamento PayPal (https://www.paypal.com/ncp/payment/...)
   // Finché restano vuoti, il pulsante avvisa di scrivere via mail.
   var CTM_LINK = {
-    annuale:  { carta: '', paypal: '' },
-    lifetime: { carta: '', paypal: '' }
+    annuale:  { carta: 'https://buy.stripe.com/aFa7sLcVPbf23pA5Poew803', paypal: 'https://www.paypal.com/ncp/payment/Z93HDAFRAWPLC' },
+    lifetime: { carta: 'https://buy.stripe.com/6oU5kDaNHaaY3pA2Dcew804', paypal: 'https://www.paypal.com/ncp/payment/8X4S6JERXWUYE' }
   };
   var CTM_NOMI_PIANO = { annuale: 'Annuale', lifetime: 'Life-time' };
 
